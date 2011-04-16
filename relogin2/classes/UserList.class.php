@@ -133,5 +133,39 @@ class UserList extends IsMySQLListClass
 		return (int)array_shift(mysql_fetch_row(
 				mysql_query('select count(*) from '.Config::DBPREF.'users')));
 	}
+	
+	/**
+	 * Nők száma összesen
+	 *
+	 * @return int
+	 */
+	public static function countWomen()
+	{
+		return (int)array_shift(mysql_fetch_row(
+				mysql_query("select count(*) from ".Config::DBPREF."profiles where sex = 'f' ")));
+	}
+	/**
+	 * Férfiak száma összesen
+	 *
+	 * @return int
+	 */
+	public static function countMen()
+	{
+		return (int)array_shift(mysql_fetch_row(
+				mysql_query("select count(*) from ".Config::DBPREF."profiles where sex = 'm'  ")));
+	}
+	
+	/**
+	 * Online userek száma összesen
+	 *
+	 * @return int
+	 */
+	public static function countOnlineUsers()
+	{
+		$filter = new UserFilter();
+		$filter->addOnlineFilter(UserFilter::ONLINE_YES);
+		return (int)array_shift(mysql_fetch_row(
+				mysql_query("select count(*) from ".self::getSql($filter))));
+	}
 }
 ?>
