@@ -1,0 +1,138 @@
+/*
+ * Alap sablon az R.E. Login 2.0 -hoz.
+ *
+ * Szerző: Takács Ákos (Rimelek)
+ * E-mail: programmer@rimelek.hu
+ * Weboldal: http://rimelek.hu
+ * Login weboldala: http://rimelek.hu/meghivos-loginrendszer-r-e-login-v2-0
+ *
+ * Ikonokat a következő weboldalakról töltöttem le:
+ * http://www.freeiconsweb.com/
+ * http://sixrevisions.com/resources/40-beautiful-free-icon-sets/
+ */
+
+#relogin-admin-menu
+{
+	margin: 0;
+	padding: 0;
+	margin-top: 5px;
+	margin-left: 5px;
+}
+
+#relogin-admin-menu li
+{
+	padding-left: 5px;
+	list-style-type: none;
+}
+
+#relogin-admin-menu a
+{
+	width: auto;
+	height: 20px;
+	padding-left: 20px;
+	padding-right: 5px;
+	display: block;
+}
+
+a#relogin-admin-settings
+{
+	background-image: url('img/config.png');
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+
+a#relogin-admin-ranks
+{
+	background-image: url('img/star.png');
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+
+a#relogin-admin-invites
+{
+	background-image: url('img/address.png');
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+
+a#relogin-admin-users
+{
+	background-image: url('img/customers.png');
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+
+.relogin-msglst
+{
+	width: 600px;
+	border-spacing: 0;
+}
+
+.relogin-msglst th
+{
+	text-align: left;
+}
+
+.relogin-msglst td
+{
+	border-top: 1px solid black;
+}
+
+.relogin-msglst td.msglst-icon
+{
+	width: 24px;
+}
+
+.relogin-msglst td.msglst-delbox
+{
+	width: 20px;
+}
+
+.relogin-msglst td.msglst-time
+{
+	width: 120px;
+}
+
+.relogin-msglst td.msglst-usr
+{
+	width: 150px;
+}
+
+.relogin-msgmenu
+{
+	margin-bottom: 10px;
+	border-bottom: 1px dotted gray;
+}
+
+#relogin-captcha-input
+{
+	text-transform: uppercase;
+}
+
+.relogin-login
+{
+	width: 165px;
+}
+
+.relogin-login .relogin-field
+{
+	width: 120px;
+	height: 16pt;
+	font-size: 8pt;
+}
+
+.relogin-users
+{
+	width: 500px;
+	border-spacing: 0;
+}
+
+.relogin-users th
+{
+	text-align: left;
+}
+
+.relogin-users td
+{
+	border-top: 1px solid gray;
+}

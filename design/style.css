@@ -1,0 +1,164 @@
+/*
+ * Alap sablon az R.E. Login 2.0 -hoz.
+ *
+ * Szerző: Takács Ákos (Rimelek)
+ * E-mail: programmer@rimelek.hu
+ * Weboldal: http://rimelek.hu
+ * Login weboldala: http://rimelek.hu/meghivos-loginrendszer-r-e-login-v2-0
+ *
+ * Ikonokat a következő weboldalakról töltöttem le:
+ * http://www.freeiconsweb.com/
+ * http://sixrevisions.com/resources/40-beautiful-free-icon-sets/
+ */
+
+body
+{
+	text-align: center;
+}
+body, td
+{
+	font-family: Arial;
+	font-size: 10pt;
+	color: black;
+}
+
+a
+{
+	color: navy;
+	text-decoration: none;
+}
+
+.clear
+{
+	clear: both;
+}
+
+#site
+{
+	border: 1px solid black;
+	text-align: left;
+	width: 1020px;
+	margin: 0;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#header
+{
+	
+}
+
+#footer
+{
+	color: maroon;
+	text-align: center;
+	font-size: 0.8em;
+}
+
+#content
+{
+	width: 850px;
+	float: left;
+}
+
+#right-side
+{
+	float: left;
+	width: 170px;
+}
+
+
+#menu
+{
+	display: inline;
+	margin: 0;
+	padding: 0;
+}
+
+#menu li
+{
+	padding-left: 5px;
+	list-style-type: none;
+}
+
+#menu a
+{
+	float: left;
+	width: auto;
+	height: 20px;
+	background-image: url('img/menuicon3.gif');
+	background-repeat: no-repeat;
+	background-position: left center;
+	padding-left: 20px;
+	padding-right: 5px;
+	display: block;
+}
+
+#menu a#menu-home
+{
+	background-image: url('img/home.png');
+}
+
+#menu a#menu-search
+{
+	background-image: url('img/zoom.png');
+}
+
+#menu a#menu-invite
+{
+	background-image: url('img/address.png');
+}
+
+#menu a#menu-users
+{
+	background-image: url('img/customers.png');
+}
+
+#menu a#menu-online
+{
+	background-image: url('img/online.png');
+}
+
+#right-menu
+{
+	margin: 0;
+	padding: 0;
+	margin-top: 5px;
+	
+}
+
+#right-menu li
+{
+	padding-left: 5px;
+	list-style-type: none;
+}
+
+#right-menu a
+{
+	width: auto;
+	height: 20px;
+	padding-left: 20px;
+	padding-right: 5px;
+	display: block;
+}
+
+#right-menu a#relogin-logout
+{
+	background-image: url('img/sign-out.png');
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+
+#right-menu a#relogin-profile
+{
+	background-image: url('img/user.png');
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+
+#right-menu a#relogin-inbox
+{
+	background-image: url('img/email.png');
+	background-repeat: no-repeat;
+	background-position: left center;
+}
