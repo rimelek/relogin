@@ -19,7 +19,7 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
 }
 ob_start();
 
-require_once('relogin2/classes/System.class.php');
+require_once(dirname(__FILE__).'/relogin2/classes/System.class.php');
 $system = System::getInstance();
 header('Content-type: text/html; charset='.Config::DBCHARSET);
 

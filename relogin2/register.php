@@ -104,7 +104,7 @@ require_once System::getIncLoginDir().'includes/register.php'; ?>
 		<tr>
 			<td colspan="2" align="center">
 				<img src="<?php print
-						System::getSitedir().(substr(System::getIncLoginDir(),strlen(System::getIncSiteDir()))).
+						System::getLoginDir().
 						'includes/captcha.php' ?>" alt="captcha" />
 			</td>
 		</tr>

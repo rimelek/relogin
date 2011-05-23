@@ -26,6 +26,7 @@ require_once 'Config_tpl.class.php';
  * @ignore
  */
 require_once '../classes/System.class.php';
+header('Content-type: text/html; charset='.Config_tpl::DBCHARSET);
 System::setSlashes($_POST);
 
 $titles = array(
