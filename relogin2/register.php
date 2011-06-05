@@ -111,7 +111,7 @@ require_once System::getIncLoginDir().'includes/register.php'; ?>
 		<tr>
 			<td colspan="2" align="center">
 				<input type="text" name="code" id="relogin-captcha-input" /><br />
-				Írd be a képen látható kódot, vagy a művelet ereményét. 
+				Írd be a képen látható kódot, vagy a művelet eredményét. 
 			</td>
 		</tr>
 		<tr>

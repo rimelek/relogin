@@ -62,7 +62,7 @@ if (!$REG_BLOCKED and isset($_GET['invitehash']) and isset($_GET['inviteid']))
 	 */
 	require_once System::getIncLoginDir().'classes/Invite.class.php';
 	$invite = new Invite((int)$_GET['inviteid']);
-	$validinvite = (!empty($invite->inviteid) and !$invite->toid and $_GET['invitehash'] == $invite->code);
+	$validinvite = (!empty($invite->inviteid) and !$invite->toid and urldecode($_GET['invitehash']) == $invite->code);
 	if (!$validinvite)
 	{
 		$msg = "Érvénytelen meghívó, vagy már beregisztráltak vele!";
@@ -100,7 +100,7 @@ if (isset($_POST['register']) and !$REG_BLOCKED and (!$INVITATION_MODE or $valid
 else if (isset($_GET['id']) and isset($_GET['code']))
 {
 	$mailact = true;
-	$msg = Register::activate($_GET['id'], $_GET['code'])
+	$msg = Register::activate($_GET['id'], urldecode($_GET['code']))
 			? "Az aktiváció sikeres volt. Most már beléphetsz. "
 			: "Az aktiváló kód érvénytelen, vagy már aktiváltad a hozzáférésedet.";
 }

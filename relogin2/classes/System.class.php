@@ -257,9 +257,8 @@ final class System
 	{
 		//Könyvtárak száma a gyökértől
 		$dir_count = substr_count($_SERVER['PHP_SELF'], '/') - 1;
-		//Konstans definiálása gyökérkönyvtárra
-		$symlink = trim(Config::SYMLINK) == '' ? '' : trim(Config::SYMLINK,'/').'/';
-		self::$BASEDIR = str_repeat('../', $dir_count).$symlink;
+		//Változó definiálása gyökérkönyvtárra
+		self::$BASEDIR = str_repeat('../', $dir_count);
 	}
 
 	/**
@@ -280,25 +279,38 @@ final class System
 	 */
 	private static function setSitedir()
 	{
-		$explode_fn = explode('/', str_replace("\\\\","/",$_SERVER['SCRIPT_FILENAME']));
-		for ($i = 0; $i < substr_count($_SERVER['PHP_SELF'], '/'); $i++)
-		{ 
-			array_pop($explode_fn);
-		}
 
-		$fn_count = count($explode_fn);
-		$explode_isd = array_reverse(explode('/', self::$INC_SITEDIR));
-		for ($i = 0; $i < $fn_count; $i++)
-		{
-    			array_pop($explode_isd);
-		}
+		$path_base = rtrim(trim(Config::PATH_BASE),'/').'/';
+		$path = '';
+		$matches = array(
+			'pref' => '/',
+			'base' => $path_base
+		);
 		
-		$explode_isd = array_reverse($explode_isd);
-		$symlink = trim(Config::SYMLINK) == '' ? '' : trim(Config::SYMLINK,'/').'/';
-		$sitedir = '/'.$symlink . implode('/', $explode_isd);
+		if (!preg_match('~^(?P<pref>(https?:/)?/)(?P<base>.*)$~', $path_base, $_matches) or !$path_base) 
+		{
+			$explode_fn = explode('/', str_replace("\\\\","/",$_SERVER['SCRIPT_FILENAME']));
+			for ($i = 0; $i < substr_count($_SERVER['PHP_SELF'], '/'); $i++)
+			{ 
+				array_pop($explode_fn);
+			}
 
+			$fn_count = count($explode_fn);
+			$explode_isd = array_reverse(explode('/', self::$INC_SITEDIR));
+			for ($i = 0; $i < $fn_count; $i++)
+			{
+					array_pop($explode_isd);
+			}
+
+			$explode_isd = array_reverse($explode_isd);
+			$path = implode('/', $explode_isd); 
+		} else {
+			$matches = $_matches;
+		}
+
+		$sitedir = $matches['base'] . $path;
 		$sitedir = $sitedir . '/';
-		self::$SITEDIR = str_replace('//', '/', $sitedir);
+		self::$SITEDIR = $matches['pref'].str_replace('//', '/', $sitedir);
 	} 
 
 	/**
@@ -328,7 +340,11 @@ final class System
 	 */
 	public static function getSitedirWithHTTP()
 	{
-		return "http://".$_SERVER['HTTP_HOST'].self::getSitedir();
+		$url = self::getSitedir();
+		if (!preg_match('~^https?://.*$~', $url)) {
+			$url = 'http://'.$_SERVER['HTTP_HOST'].$url;
+		}
+		return $url;
 	}
 
 	/**
@@ -338,9 +354,12 @@ final class System
 	 */
 	public static function getLoginDirWithHTTP()
 	{
-		return "http://".$_SERVER['HTTP_HOST'].self::getLogindir();
+		$url = self::getLogindir();
+		if (!preg_match('~^https?://.*$~', $url)) {
+			$url = 'http://'.$_SERVER['HTTP_HOST'].$url;
+		}
+		return $url;
 	}
-
 	/**
 	 * URL a sitedir-től számítva
 	 * 

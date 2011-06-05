@@ -73,8 +73,8 @@ $titles = array(
 								hiba esetén ide irányít',
 		'FILE_LOGOUT' => 'Kijelentkezés',
 		'MAX_ONLINE_TIME' => 'Hány mp-ig számítson <br />onlinenak egy user?',
-		'SYMLINK' => 'PATH prefix (pl symlink esetén)<br /> <small>'.
-					'Hagyd üresen, ha nem tudod, mi ez. </small> '
+		'PATH_BASE' => 'Weblap gyökér a szerver gyökértől.<br />'.
+						'(pl /weblapom) <small>Üresen hagyva automatikus. </small> '
 	);
 
 

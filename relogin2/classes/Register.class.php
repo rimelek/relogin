@@ -186,7 +186,7 @@ class Register
 		$get['id'] = $id;
 		$get['code'] = self::createHash($id, $email);
 		return
-			'http://'.$_SERVER['HTTP_HOST'].System::getSitedir().$file.
+			System::getSitedirWithHTTP().$file.
 			'?'.http_build_query($get, '', '&amp;');
 	}
 

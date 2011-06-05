@@ -1,6 +1,6 @@
 <?php
 /**
- * Módosítva: 2010.03.29.
+ * Módosítva: 2011.06.05.
  *
  * <b>Szerző weboldala:</b> {@link http://rimelek.hu/}<br />
  * <b>Captcha weblapja:</b> {@link http://rimelek.hu/php-ellenorzo-kod-r-e-captcha-v1-0/ R.E. Captcha v1.0}
@@ -16,7 +16,7 @@
  *
  * @author Takács Ákos (Rimelek), programmer [at] rimelek [dot] hu
  * @copyright Copyright (C) 2010, Takács Ákos
- * @version 1.0
+ * @version 1.0.1
  * @package RECaptcha
  */
 
@@ -363,6 +363,13 @@ class RECaptcha
 		{
 			exit('<b>'.$this->fonttype.'</b> not found!');
 		}
+		
+		/*
+		 * freeweb.hu szolgáltató miatt került be ez a sor. E nélkül
+		 * ott nem jelennek meg a truetype fontok. 
+		 */
+		imagettftext($this->source, 0, 0, 0, 0, 0, $this->fonttype, '');
+		
 		//ha a generált szám 0
 		if(mt_rand(0,1) == 0) {
 			//akkor karaktersorozatot generál

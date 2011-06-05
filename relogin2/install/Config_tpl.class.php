@@ -225,10 +225,13 @@ final class Config_tpl
 	const FILE_PROTECTED_SITE = 'index.php';
 
 	/**
-	 * url prefix. Szimbolikus link esetén például szükség lehet rá.
-	 * Bekerül a web gyökér elé.
+	 * Weboldal gyökérkönyvtára. Üresen hagyva a login maga számolja ki.
+	 * Megadható szervergyökértől: /weblapom
+	 * vagy relatívan: weblapom
+	 * Utóbbi esetben a login által számított útvonal elé teszi. /-el kezdve
+	 * viszont lecseréli azt. 
 	 */
-	const SYMLINK = '';
+	const PATH_BASE = '';
 
 	/**
 	 * Példány változója
