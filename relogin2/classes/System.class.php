@@ -280,7 +280,7 @@ final class System
 	private static function setSitedir()
 	{
 
-		$path_base = rtrim(trim(Config::PATH_BASE),'/').'/';
+		$path_base = trim(Config::PATH_BASE);
 		$path = '';
 		$matches = array(
 			'pref' => '/',
@@ -308,9 +308,8 @@ final class System
 			$matches = $_matches;
 		}
 
-		$sitedir = $matches['base'] . $path;
-		$sitedir = $sitedir . '/';
-		self::$SITEDIR = $matches['pref'].str_replace('//', '/', $sitedir);
+		$sitedir = $matches['base'] .'/'. $path.'/';
+		self::$SITEDIR = $matches['pref'].ltrim(preg_replace('~[/]+~', '/', $sitedir),'/');
 	} 
 
 	/**
