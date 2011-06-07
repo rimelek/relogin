@@ -226,10 +226,10 @@ final class Config_tpl
 
 	/**
 	 * Weboldal gyökérkönyvtára. Üresen hagyva a login maga számolja ki.
-	 * Megadható szervergyökértől: /weblapom
+	 * Megadható tárhelygyökértől: /weblapom
 	 * vagy relatívan: weblapom
-	 * Utóbbi esetben a login által számított útvonal elé teszi. /-el kezdve
-	 * viszont lecseréli azt. 
+	 * Utóbbi esetben a login által számított útvonal elé teszi. /-el 
+	 * vagy http-vel kezdve viszont lecseréli azt. 
 	 */
 	const PATH_BASE = '';
 

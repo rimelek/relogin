@@ -73,7 +73,7 @@ $titles = array(
 								hiba esetén ide irányít',
 		'FILE_LOGOUT' => 'Kijelentkezés',
 		'MAX_ONLINE_TIME' => 'Hány mp-ig számítson <br />onlinenak egy user?',
-		'PATH_BASE' => 'Weblap gyökér a szerver gyökértől.<br />'.
+		'PATH_BASE' => 'Weblap gyökér a tárhely gyökértől.<br />'.
 						'(pl /weblapom) <small>Üresen hagyva automatikus. </small> '
 	);
 
