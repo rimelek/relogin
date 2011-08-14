@@ -4,7 +4,7 @@
  *
  * Bejelentkezés műveletei<br />
  * <br />
- * <b>Dátum:</b> 2010.04.02.
+ * <b>Dátum:</b> 2011.08.14.
  *
  * <b>Szerző weboldala:</b> {@link http://rimelek.hu/}<br />
  * <b>Login weblapja:</b> {@link http://rimelek.hu/meghivos-loginrendszer-r-e-login-v2-0 R.E. Login v2.0}
