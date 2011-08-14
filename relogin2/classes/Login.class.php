@@ -175,6 +175,7 @@ class Login
 		if (System::$logged)
 		{
 			System::$user->onlinestatus = 0;
+			System::$user->update();
 		}
 		Session::getInstance()->setLifetime(0);
 	}
