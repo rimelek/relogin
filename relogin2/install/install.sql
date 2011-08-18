@@ -13,8 +13,8 @@ COLLATE = {collate};
 -- table
 CREATE  TABLE IF NOT EXISTS `{prefix}users` (
   `userid` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `username` VARCHAR(45) CHARACTER SET '{charset}' COLLATE '{collate}' NOT NULL ,
-  `userpass` VARCHAR(45) CHARACTER SET '{charset}' COLLATE '{collate}' NOT NULL ,
+  `username` VARCHAR(45) CHARACTER SET {charset} COLLATE {collate} NOT NULL ,
+  `userpass` VARCHAR(45) CHARACTER SET {charset} COLLATE {collate} NOT NULL ,
   `rank` INT UNSIGNED NOT NULL ,
   `regtime` TIMESTAMP NULL ,
   `refreshtime` TIMESTAMP NULL ,
@@ -22,7 +22,7 @@ CREATE  TABLE IF NOT EXISTS `{prefix}users` (
   `onlinetime` INT UNSIGNED NOT NULL DEFAULT 0 ,
   `onlinestatus` TINYINT(1) NOT NULL DEFAULT 0 ,
   `invitations` TINYINT UNSIGNED NULL ,
-  `useremail` VARCHAR(100) CHARACTER SET '{charset}' COLLATE '{collate}' NOT NULL ,
+  `useremail` VARCHAR(100) CHARACTER SET {charset} COLLATE {collate} NOT NULL ,
   `newsreadtime` TIMESTAMP NULL,
   PRIMARY KEY (`userid`) )
 ENGINE = MyISAM
@@ -56,8 +56,8 @@ CREATE  TABLE IF NOT EXISTS `{prefix}invites` (
   `inviteid` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `fromid` INT UNSIGNED NOT NULL ,
   `toid` INT UNSIGNED NOT NULL ,
-  `code` VARCHAR(45) CHARACTER SET '{charset}' COLLATE '{collate}' NOT NULL ,
-  `email` VARCHAR(100) CHARACTER SET '{charset}' COLLATE '{collate}' NOT NULL COMMENT 'A meghivott email-je' ,
+  `code` VARCHAR(45) CHARACTER SET {charset} COLLATE {collate} NOT NULL ,
+  `email` VARCHAR(100) CHARACTER SET {charset} COLLATE {collate} NOT NULL COMMENT 'A meghivott email-je' ,
   `sendtime` TIMESTAMP NOT NULL ,
   PRIMARY KEY (`inviteid`) ,
   INDEX `fk_invites_users1` (`fromid` ASC) )
@@ -68,8 +68,8 @@ COLLATE = {collate};
 -- table
 CREATE  TABLE IF NOT EXISTS `{prefix}ranks` (
   `rankid` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `name` VARCHAR(45) CHARACTER SET '{charset}' COLLATE '{collate}' NOT NULL COMMENT 'A rang megjelenitendo neve' ,
-  `varname` VARCHAR(20) CHARACTER SET '{charset}' COLLATE '{collate}' NOT NULL COMMENT 'A valtozo neve' ,
+  `name` VARCHAR(45) CHARACTER SET {charset} COLLATE {collate} NOT NULL COMMENT 'A rang megjelenitendo neve' ,
+  `varname` VARCHAR(20) CHARACTER SET {charset} COLLATE {collate} NOT NULL COMMENT 'A valtozo neve' ,
   PRIMARY KEY (`rankid`) ,
   UNIQUE INDEX `unique` (`varname` ASC) )
 ENGINE = MyISAM
@@ -91,7 +91,7 @@ UPDATE `{prefix}ranks` SET `rankid` = '0' WHERE `rankid` = 5;
 CREATE  TABLE IF NOT EXISTS `{prefix}forgotpass` (
   `userid` INT UNSIGNED NOT NULL ,
   `sendtime` TIMESTAMP NOT NULL ,
-  `code` VARCHAR(45) CHARACTER SET '{charset}' COLLATE '{collate}' NOT NULL ,
+  `code` VARCHAR(45) CHARACTER SET {charset} COLLATE {collate} NOT NULL ,
   PRIMARY KEY (`userid`) )
 ENGINE = MyISAM
 DEFAULT CHARACTER SET = {charset}
@@ -105,8 +105,8 @@ CREATE  TABLE IF NOT EXISTS `{prefix}messages` (
   `deleted` INT UNSIGNED NOT NULL COMMENT 'Annak a usernek az id-je, aki torolte mar az uzenetet' ,
   `sendtime` TIMESTAMP NULL ,
   `readtime` TIMESTAMP NULL ,
-  `subject` VARCHAR(100) CHARACTER SET '{charset}' COLLATE '{collate}' NOT NULL ,
-  `body` TEXT CHARACTER SET '{charset}' COLLATE '{collate}' NOT NULL ,
+  `subject` VARCHAR(100) CHARACTER SET {charset} COLLATE {collate} NOT NULL ,
+  `body` TEXT CHARACTER SET {charset} COLLATE {collate} NOT NULL ,
   PRIMARY KEY (`messageid`) )
 ENGINE = MyISAM
 DEFAULT CHARACTER SET = {charset}
@@ -117,8 +117,8 @@ COLLATE = {collate};
 CREATE  TABLE IF NOT EXISTS `{prefix}searchlog` (
   `searchid` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `userid` INT UNSIGNED NOT NULL ,
-  `logname` VARCHAR(100) CHARACTER SET '{charset}' COLLATE '{collate}' NOT NULL ,
-  `logtext` TEXT CHARACTER SET '{charset}' COLLATE '{collate}' NOT NULL ,
+  `logname` VARCHAR(100) CHARACTER SET {charset} COLLATE {collate} NOT NULL ,
+  `logtext` TEXT CHARACTER SET {charset} COLLATE {collate} NOT NULL ,
   `logtime` timestamp NOT NULL ,
   PRIMARY KEY (`searchid`) ,
   INDEX `fk_searchlog_users1` (`userid` ASC) )
