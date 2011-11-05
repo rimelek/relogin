@@ -176,7 +176,9 @@ class ChangeProfile
 		{
 			$userpass = Login::getPasswordHash($post['newuserpass']);
 			self::$user->userpass = $userpass;
-			Login::changePassword($userpass);
+                        if (System::$user == self::$user) {
+                            Login::changePassword($userpass);
+                        }
 
 		}
 

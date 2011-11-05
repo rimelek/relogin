@@ -89,7 +89,14 @@ if (!file_exists('../classes/Config.class.php'))
 	$installed = false;
 	if ($install = isset ($_POST['install']))
 	{
-		$constants = $_POST['install'];
+		$constants = $_POST['install'] + array(
+                    'SMTP_ON' => '',
+                    'SMTP_AUTH' => '',
+                    'REG_BLOCKED' => '',
+                    'LOGIN_BLOCKED' => '',
+                    'INVITATION_MODE' => '',
+                    'EMAIL_ACTIVATION' => ''
+                );
 		$constants['SMTP_ON'] = ($constants['SMTP_ON'] == 'on') ? true : false;
 		$constants['SMTP_AUTH'] = ($constants['SMTP_AUTH'] == 'on') ? true : false;
 		$constants['REG_BLOCKED'] = ($constants['REG_BLOCKED'] == 'on') ? true : false;
