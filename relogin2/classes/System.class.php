@@ -493,7 +493,7 @@ final class System
 	 *		Ha tömb, akkor több rang engedélyezhető.
 	 *		Ha nincs megadva ez a paraméter, akkor csak belépett felhasználók
 	 *		nézhetik az oldalt. 
-	 */
+	 */	
 	public static function protectedSite($rank=null)
 	{
 		
@@ -506,20 +506,21 @@ final class System
 		}
 
 		$site = Config::FILE_PROTECTED_SITE;
-		if (!file_exists($site))
+                
+		if (!file_exists(self::getIncSitedir().$site))
 		{
 			$site = isset($_SERVER['HTTP_REFERER'])
 				? $_SERVER['HTTP_REFERER']
 				: null;
+		} else {
+			$site = self::getSitedir().$site;
 		}
 		
 		if (!is_null($site))
 		{
-			if (!isset($_SESSION['redirected']))
+			if ($site != $_SERVER['REQUEST_URI'])
 			{
-				$_SESSION['redirected'] = true;
 				self::redirect($site);
-				exit;
 			}
 			else
 			{
@@ -528,7 +529,7 @@ final class System
 		}
 		ob_end_clean();
 		exit('Protected site');
-	}
+	}  
 	
 	/**
 	 * E-mail küldése
@@ -536,7 +537,7 @@ final class System
 	 * @see http://phpmailer.worxware.com/
 	 * @see PHPMailer
 	 *
-	 * @param string $to címzett, ha $params['toadmin] = false, egyébként válaszcím
+	 * @param string $to címzett, ha $params['toadmin'] = false, egyébként válaszcím
 	 * @param string $subject Tárgy
 	 * @param string $body Tartalom
 	 * @param array $params Egyéb paraméterek tömbje:<br />
