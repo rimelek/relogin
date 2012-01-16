@@ -310,7 +310,7 @@ class User extends IsMySQLClass
 	{
 		$email = empty($this->T_users_useremail) ? '' : $this->T_users_useremail;
 		return "http://www.mkavatar.hu/avatar.php?email="
-			. md5( strtolower( $email ) )
+			. md5( $email ) //mkavatar nem alakítja kisbetűssé a mailcímet hashelés előtt
 			."&amp;default="
 			.urlencode( self::defaultAvatar($this->sex) )
 			."&amp;size=" . $size
