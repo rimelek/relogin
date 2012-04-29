@@ -3,9 +3,7 @@
  * R.E. DBObjects
  *
  * @author Takács Ákos (Rimelek), programmer [at] rimelek [dot] hu
- * @copyright Copyright (C) 2010, Takács Ákos
- * @version 2.1
- * @license http://www.gnu.org/licenses/lgpl.html
+ * 
  * @package REDBObjects
  */
 
@@ -16,8 +14,7 @@
  * tábláinak mezőit szeretné tulajdonságokként kezelni
  *
  * @author Takács Ákos (Rimelek), programmer [at] rimelek [dot] hu
- * @copyright Copyright (C) 2010, Takács Ákos
- * @license http://www.gnu.org/licenses/lgpl.html
+ * 
  * @package REDBObjects
  */
 interface IIsDBClass extends Countable
@@ -55,4 +52,3 @@ interface IIsDBClass extends Countable
 	 */
 	function init($rowid);
 }
-?>

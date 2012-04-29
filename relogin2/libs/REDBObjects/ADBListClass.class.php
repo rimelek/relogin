@@ -3,9 +3,7 @@
  * R.E. DBObjects
  *
  * @author Takács Ákos (Rimelek), programmer [at] rimelek [dot] hu
- * @copyright Copyright (C) 2010, Takács Ákos
- * @version 2.1
- * @license http://www.gnu.org/licenses/lgpl.html
+ * 
  * @package REDBObjects
  */
 
@@ -20,8 +18,7 @@ require_once dirname(__FILE__).'/ADBClass.class.php';
  * Minden lista lapozható
  *
  * @author Takács Ákos (Rimelek), programmer [at] rimelek [dot] hu
- * @copyright Copyright (C) 2010, Takács Ákos
- * @license http://www.gnu.org/licenses/lgpl.html
+ * 
  * @package REDBObjects
  */
 abstract class ADBListClass extends ADBClass
@@ -226,7 +223,7 @@ abstract class ADBListClass extends ADBClass
 			$pageLinks .= " &nbsp; ";
 		}
 
-		for ($i=1+$linkoffset; $i <= $linkend; $i++)
+		for ($i=1+$linkoffset; $i <= $linkend and $i < $maxpage; $i++)
 		{
 			$url = self::setUrl(array($pagevar=>$i));
 			$class = ($i == $page) ? "pagelink current" : "pagelink";
@@ -289,4 +286,3 @@ abstract class ADBListClass extends ADBClass
 	}
 
 }
-?>

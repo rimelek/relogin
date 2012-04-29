@@ -3,9 +3,7 @@
  * R.E. DBObjects
  *
  * @author Takács Ákos (Rimelek), programmer [at] rimelek [dot] hu
- * @copyright Copyright (C) 2010, Takács Ákos
- * @version 2.1
- * @license http://www.gnu.org/licenses/lgpl.html
+ * 
  * @package REDBObjects
  */
 
@@ -43,17 +41,17 @@ require_once dirname(__FILE__).'/../IIsDBClass.class.php';
  * $user = new MyClass(array(
  * 	'users'=>array('useremail','username'),
  * 	'profile'=>array('firstname','lastname','useremail')));
- * $user->keyName = 'userid';
- * $user->init(12);  //Valamilyen kapcsoló mező értéke alapján
- * //Vagy sql lekérdezés alapján. Ekkor a második paraméter true kell legyen.
- * //Első paraméter pedig az sql lekérdezés FROM kulcsszó utáni része
- * //$user->init("users left join profile where users.useremail = 'valami@ize.hu'",true);
+ *
+ * $user->init(array('id'=>12));  //Valamilyen kapcsoló mező értéke alapján
+ * //Vagy sql lekérdezés alapján.
+ * //Az sql lekérdezés FROM kulcsszó utáni része
+ * //$user->init("users left join profile where users.useremail = 'valami@ize.hu'");
  * print "A nevem: ".$user->lastname." ".$user->firstname."<br />";
  * $user->lastname = 'Új vezetéknév';
  * $user->firstname 'Új keresztnév';
  * //Vagy akár így is:
  * //$user['lastname'] = 'Új vezetéknév';
- * $user->T_profile_useremail = 'Új publikus emailcím';
+ * $user->T__profile__useremail = 'Új publikus emailcím';
  * //Ez a metódus végzi el a frissítést. Enélkül nem kerül adatbázisba az új adat
  * $user->update();
  * </code>
@@ -62,35 +60,43 @@ require_once dirname(__FILE__).'/../IIsDBClass.class.php';
  * @property string $table_field_sep Táblanevet és mezőnevet elválasztó jel
  *
  * @author Takács Ákos (Rimelek), programmer [at] rimelek [dot] hu
- * @copyright Copyright (C) 2010, Takács Ákos
- * @license http://www.gnu.org/licenses/lgpl.html
+ * 
  * @package REDBObjects
  */
 class IsMySQLClass extends ADBClass implements IIsDBClass, Iterator, ArrayAccess
 {
+
+	/**
+	 * Csak következő frissítésig, vagy hozzáadásig
+	 */
+	const NQ_LEVEL_NOW = 'nq_level_now';
+
+	/**
+	 * Mindig
+	 */
+	const NQ_LEVEL_EVER = 'nq_level_ever';
+
+	/**
+	 * Legyen idézőjelezve mező
+	 */
+	const NQ_LEVEL_QUOTED = false;
+
+	/**
+	 * Ne legyen idézőjelbe rakva sql utasításban az adat.
+	 * Mezők listája. array(tabla=>array(mezo=> array(
+	 *					current => x,
+	 *					default => y
+	 *				)))
+	 *
+	 * @var array
+	 */
+	private $nonquoted = array();
 	/**
 	*	Az értékadás feltöltődő asszociatív tömb
 	*
 	*	@var array $new_properties
 	*/
 	public $new_properties = array();
-
-	/**
-	*	A táblákat összekapcsoló mező értéke
-	*
-	*	Ezt a mezőt csak az {@link IsDBList} osztály használja, hogy visszaadja az utoljára hozzáadott rekord
-	*	összekapcsoló mezőjének értékét.
-	*
-	*	@var string $keyValue;
-	*/
-	public $keyValue="";
-
-	/**
-	*	Sql kérés volt-e megadva az init() paramétereként.
-	*
-	*	@var string $isSqlQuery
-	*/
-	protected $isSqlQuery = false;
 
 	/**
 	*	IsMySQLClass osztály konstruktora
@@ -120,14 +126,12 @@ class IsMySQLClass extends ADBClass implements IIsDBClass, Iterator, ArrayAccess
 	 *
 	 * Ez a metódus választja ki a táblákból azt az egy rekordot, amiből létrehozza az objektumtulajdonságokat.
 	 *
-	 * @param mixed $rowid Azonosító, ami minden táblában azonos értékű
-	 * @param bool $bool Ha true, akkor a $rowid lehet sql utasítás ( csak a from kulcsszó utáni rész )
+	 * @param mixed $rowid Azonosító array(mező=>érték) formában, vagy sql utasítás "from" utáni része.
 	 */
-	public function init($rowid,$bool=false)
+	public function init($rowid)
 	{
 		//ha sql lekérdezéssel inicializáljuk az objektumot
-		if ($bool) {
-			$this->isSqlQuery=true;
+		if (!is_array($rowid)) {
 			$afields = array();
 			//végig kell menni a táblalistánés összeállítani a lekérdezendő mezőlistát
 			foreach($this->tablelist as $tableName=>$fieldList)
@@ -138,12 +142,17 @@ class IsMySQLClass extends ADBClass implements IIsDBClass, Iterator, ArrayAccess
 					$afields[] = "`$tableName`.`$field` as `$tableName.$field`";
 				}
 				//ha az elsődleges kulcs mezőt nem kértük le, akkor automatikusan lekérdezéshez adódik
-				if (!isset($fieldList[key($this->priKeys[$tableName])])) {
-					$afields[] = "`$tableName`.`".
-						key($this->priKeys[$tableName]).
-						"` as `$tableName.".key($this->priKeys[$tableName])."`";
-
+				foreach($this->priKeys[$tableName] as $pkn => $pkv) {
+					if (!isset($fieldList[$pkn])) {
+						$afields[] = "`$tableName`.`$pkn` as `$tableName.$pkn`";
+					}
 				}
+
+				//virtuális mezők felvétele mező listába
+				foreach ($this->virtualFields[$tableName] as $fn => $fv) {
+					$afields[] = " ($fv) as `.$tableName.$fn` ";
+				}
+
 			}
 			$fields = implode(",\n",$afields);
 			$i=0;
@@ -158,26 +167,48 @@ class IsMySQLClass extends ADBClass implements IIsDBClass, Iterator, ArrayAccess
 						$this->properties[$tableName][$field] = $fetch[$tableName.'.'.$field];
 					}
 					//az elsődleges kulcsok értékeit külön is tárolni kell egy tömbben
-					$this->priKeys[$tableName][key($this->priKeys[$tableName])] =
-						$fetch[$tableName.'.'.key($this->priKeys[$tableName])];
+					foreach ($this->priKeys[$tableName] as $pkn => $pkv) {
+						$this->priKeys[$tableName][$pkn] = $fetch[$tableName.'.'.$pkn];
+					}
+				}
+				foreach ($this->virtualFields as $tableName => &$fieldList) {
+					foreach ($fieldList as $fn => &$fv) {
+						$fv = $fetch['.'.$tableName.'.'.$fn];
+					}
 				}
 			}
 			return;
 		}
 		//Ez a rész már csak akkor fut le, ha nem sql lekérdezéssel, hanem mező értékkel  inicializáltuk az objektumot
 
-		//A kapcsoló mező nevére szükség van. Ezért ha nincs megadva, kivételt kell dobni
-		if (trim($this->keyName) == "") throw new NotIssetPropertyException(__CLASS__."::keyName nincs beállítva!");
-
-		$this->keyValue = $rowid;
 		//végig kell menni ciklusban az összes táblán, és lekérdezni a mezők értékeit
 		foreach ($this->tablelist as $tableName=>$fieldList) {
-			$fields = '`'.implode('`, `',$fieldList).'`';
+			//virtuális mezők felvétele mező listába
+			foreach ($this->virtualFields[$tableName] as $fn => $fv) {
+				$fieldList[] = " ($fv) as `.$tableName.$fn` ";
+			}
+			foreach ($this->priKeys[$tableName] as $pkn => $pkv) {
+				$fieldList[] = "`$pkn`";
+			}
+			$fieldList = array_unique($fieldList);
+			$fields = implode(",\n", $fieldList);
 			$t = (isset($this->tableAliases[$tableName])) ? $this->tableAliases[$tableName] : $tableName;
-			$sql = "select $fields from `$t` where `".$this->keyName."` = '$rowid' limit 1";
+			$sql = "select $fields from `$t` where ".REDBObjects::createWhere($rowid)." limit 1";
 			if($fetch = mysql_fetch_assoc(mysql_query($sql)))
 			{
+				foreach ($fetch as $key => &$value) {
+					if (substr($key, 0,1) == '.') {
+						list(,,$f) = explode('.',$key);
+						$this->virtualFields[$tableName][$f] = $value;
+						unset($value);
+					}
+				}
 				$this->properties[$tableName] = $fetch;
+				foreach ($this->priKeys[$tableName] as $pkn => $pkv) {
+					if (isset($fetch[$pkn])) {
+						$this->priKeys[$tableName][$pkn] = $fetch[$pkn];
+					}
+				}
 			}
 		}
 	}
@@ -187,7 +218,7 @@ class IsMySQLClass extends ADBClass implements IIsDBClass, Iterator, ArrayAccess
 	 * és beállítása tulajdonságnak
 	 */
 	public function getFields()
-	{
+	{ 
 		//a táblákat végigjárva az összes mezőjének nevét lekérdezi, így az indexek mindig léteznek,
 		//és az update() metódus akor is kiszűri a nem létező neveket, ha nem volt inicializálva az objektum
 		$fields = array();
@@ -204,6 +235,15 @@ class IsMySQLClass extends ADBClass implements IIsDBClass, Iterator, ArrayAccess
 				unset($this->tablelist[$tableName]);
 				$tableName = $alias;
 			}
+
+			//virtuaális mezők
+			foreach ($fieldList as $fn => &$fv) {
+				if (!is_numeric($fn)) {
+					$this->virtualFields[$tableName][$fn] = $fv;
+					unset($this->tablelist[$tn][$fn]);
+				}
+			}
+
 			$query = mysql_query("show columns from `".$from."`");
 			$in = false;
 			while ($field = mysql_fetch_assoc($query))
@@ -211,7 +251,7 @@ class IsMySQLClass extends ADBClass implements IIsDBClass, Iterator, ArrayAccess
 				//ha az összes mezőt * karakterrel jelöltük
 				if (($_in = $in) !== false or ($in = array_search('*',$fieldList)) !== false)
 				{
-					//akkor törölhető a lista és felvehetők az mezőnevek egyenként
+					//akkor törölhető a lista és felvehetők a mezőnevek egyenként
 					if ($_in === false) $this->tablelist[$tableName] = array();
 					$this->tablelist[$tableName][] = $field['Field'];
 
@@ -220,17 +260,12 @@ class IsMySQLClass extends ADBClass implements IIsDBClass, Iterator, ArrayAccess
 				{
 					$this->properties[$tableName][$field['Field']] = '';
 				}
-				//Ha ez az elsődleges kulcs mező, akkor visszaadja a primary_key
-				//tulajdonságnak, hogy a kapcsoló mező elsődleges kulcs
-				if ($this->keyName == $field['Field'])
-				{
-					$this->primary_key = $field['Field'];
-				}
+
 				//minden elsődleges kulcs mező értékét külön is tároljuk,
 				//ezért előtte biztositjuk a helyet neki üres értékkel
 				if ($field['Key'] == 'PRI')
 				{
-					$this->priKeys[$tableName] = array($field['Field']=>'');
+					$this->priKeys[$tableName][$field['Field']] = '';
 				}
 			}
 			//Mivel elsődleges kulcs mezőkre mindenképp szükség van,
@@ -303,35 +338,10 @@ class IsMySQLClass extends ADBClass implements IIsDBClass, Iterator, ArrayAccess
 	 * @ignore
 	 */
 	public function __set($var,$value)
-	{ 	$table=''; $field=''; $hit=false;
-		//Meg kell állapítani a mező és táblanevet, ha értékadáskor a táblanevet is megadtuk
-		$issep = $this->sep_table_field($var,$table,$field);
-		//amennyiben tényleg megadták a táblanevet, a meghatározott mezőnevet be kell állítani
-		if ($issep) {
-			$var = $field;
-		}
-		//Jöhet a táblák pásztázása egyenként
-		foreach ($this->tablelist as $tableName=>$fieldList)
-		{
-			//ha a táblanevet is megadták, de épp nem ez az a tábla,
-			//akkor tovább lehet menni a következő táblára
-			if($issep and $tableName != $table)
-			{
-				continue;
-			}
-			//függetlenül attól, más táblának is volt-e ilyen mezője
-			//átadható az érték az új értékeknek
-			if (array_key_exists($var,$this->properties[$tableName])) {
-				$this->new_properties[$tableName][$var] = $value;
-				$hit=true;
-				//De ha meg volt adva a táblanév is, akkor kész vagyunk. A program leáll
-				if ($issep) {
-					return;
-				}
-			}
-		}
+	{
+
 		//Ha volt találat, kiléphetünk a programból
-		if ($hit) return;
+		if ($this->set($var, $value)) return;
 		//ha nem votl találat, de vagy a tableName_signal vagy a table_field_sep változó üres
 		if (($var == 'tableName_signal' or $var == 'table_field_sep') and trim($value) == '') {
 			//kivételt kell dobni, mert azok nem lehetnek sosem üresek
@@ -417,18 +427,20 @@ class IsMySQLClass extends ADBClass implements IIsDBClass, Iterator, ArrayAccess
 			if ($refreshDB) {
 				//Akkor ha van mit frissíteni
 				if (count($this->new_properties[$tableName])) {
-					//el kell dönteni mi az updatelés feltétele. hhez kell a keyValue, és a keyName
-					$keyName = ($this->isSqlQuery) ? key($this->priKeys[$tableName]) : $this->keyName;
-					$keyValue = ($this->isSqlQuery) ? current($this->priKeys[$tableName]) : $this->keyValue;
 					$update = array();
 					//most már lehet összeállítani az sql utasítást
 					foreach ($this->new_properties[$tableName] as $fieldName=>$value )
 					{
-						$update[] = "`$fieldName` = '".mysql_real_escape_string($value)."' ";
+						if (!$this->isNonQuoted($tableName, $fieldName)) {
+							$value = "'".  mysql_real_escape_string($value)."'";
+						}
+						//Minden érték visszaállítása alapra
+						$this->resetNonQuoted($tableName, $fieldName);
+						$update[] = "`$fieldName` = $value ";
 					}
 					$update = implode(', ',$update);
 					$t = (isset($this->tableAliases[$tableName])) ? $this->tableAliases[$tableName] : $tableName;
-					$sql = "update `$t` set $update where `".$keyName."` = '".$keyValue."'";
+					$sql = "update `$t` set $update where ".$this->_getPKCond($tableName);
 					$query = mysql_query($sql);
 				}
 			}
@@ -446,6 +458,17 @@ class IsMySQLClass extends ADBClass implements IIsDBClass, Iterator, ArrayAccess
 				$this->new_properties[$tableName] = array();
 			}
 		}
+	}
+
+	/**
+	 * Elsődleges kulcs(ok) where feltételhez.
+	 * 
+	 * @param string $tableName Tábla neve
+	 */
+	private function _getPKCond($tableName)
+	{
+		$pk_where = array();
+		return REDBObjects::createWhere($this->priKeys[$tableName]);
 	}
 
 	/**
@@ -589,5 +612,103 @@ class IsMySQLClass extends ADBClass implements IIsDBClass, Iterator, ArrayAccess
 			}
 		}
 	}
+
+	/**
+	 *
+	 * @param string $var Mező neve
+	 * @param mixed $value Új érték
+	 * @param bool $quoted Legyen-e idézőjelezve
+	 *
+	 * @param bool Volt-e $var nevű, beállítható mező
+	 */
+	public function set($var, $value, $quoted=true)
+	{
+		$table=''; $field=''; $hit=false;
+		//Meg kell állapítani a mező és táblanevet, ha értékadáskor a táblanevet is megadtuk
+		$issep = $this->sep_table_field($var,$table,$field);
+		//amennyiben tényleg megadták a táblanevet, a meghatározott mezőnevet be kell állítani
+		if ($issep) {
+			$var = $field;
+		}
+		//Jöhet a táblák pásztázása egyenként
+		foreach ($this->tablelist as $tableName=>$fieldList)
+		{
+			//ha a táblanevet is megadták, de épp nem ez az a tábla,
+			//akkor tovább lehet menni a következő táblára
+			if($issep and $tableName != $table)
+			{
+				continue;
+			}
+			//függetlenül attól, más táblának is volt-e ilyen mezője
+			//átadható az érték az új értékeknek
+			if (array_key_exists($var,$this->properties[$tableName])) {
+				$this->new_properties[$tableName][$var] = $value;
+				//Legyen-e idézőjelezve
+				if (!$quoted and !$this->isNonQuoted($tableName, $var)) {
+					$this->setNonQuoted($tableName, $var, self::NQ_LEVEL_NOW, true);
+				}
+				$hit=true;
+				//De ha meg volt adva a táblanév is, akkor kész vagyunk. A program leáll
+				if ($issep) {
+					return true;
+				}
+			}
+		}
+		return $hit;
+	}
+
+	/**
+	 *
+	 * @param string $tableName Tábla neve ( alias, ha van )
+	 * @param string $field Mező neve
+	 * @return bool 
+	 */
+	public function isNonQuoted($tableName, $field)
+	{
+		return in_array($this->getNonQuotedLevel($tableName, $field), array(
+			self::NQ_LEVEL_EVER, self::NQ_LEVEL_NOW
+		));
+	}
+
+
+	/**
+	 *
+	 * @param string $tableName
+	 * @param string $field
+	 * @return mixed
+	 */
+	public function getNonQuotedLevel($tableName, $field, $default_level=false)
+	{
+		if (!isset($this->nonquoted[$tableName][$field])) {
+			$this->nonquoted[$tableName][$field] = array(
+				'current' => self::NQ_LEVEL_QUOTED,
+				'default' => self::NQ_LEVEL_QUOTED
+			);
+		}
+		return $this->nonquoted[$tableName][$field][$default_level ? 'default' : 'current' ];
+	}
+
+	/**
+	 *
+	 * @param string $tableName Tábla neve ( alias, ha van )
+	 * @param string $field Mező neve
+	 */
+	public function setNonQuoted($tableName, $field, $level=self::NQ_LEVEL_NOW, $current=false)
+	{
+
+		$this->nonquoted[$tableName][$field]['current'] = $level;
+		if (!$current) {
+			$this->nonquoted[$tableName][$field]['default'] = $level;
+		}
+	}
+
+	public function resetNonQuoted($tableName, $field)
+	{
+		$default = $this->getNonQuotedLevel($tableName, $field, true);
+		if ($default == self::NQ_LEVEL_NOW) {
+			$this->setNonQuoted($tableName, $field, self::NQ_LEVEL_QUOTED);
+		} else {
+			$this->setNonQuoted($tableName, $field, $default);
+		}
+	}
 }
-?>
