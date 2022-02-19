@@ -26,6 +26,10 @@ require_once System::getIncLoginDir().'classes/Login.class.php';
  */
 require_once System::getIncLoginDir().'classes/UserList.class.php';
 
+/**
+ * @ignore
+ */
+require_once System::getIncLoginDir().'classes/IsMySQLListClassFix.class.php';
 
 /**
  * Regisztráció, és aktiváció
@@ -243,7 +247,7 @@ class Register
 	 */
 	public static function addUser($user) 
 	{
-		$DB = new IsMySQLListClass(self::getRecord(),'User');
+		$DB = new IsMySQLListClassFix(self::getRecord(),'User');
 		$user->keyName = 'userid';
 		return $DB->add($user);
 	}
