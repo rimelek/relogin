@@ -17,6 +17,15 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
 } else {
 	error_reporting(0);
 }
+
+$errRepSwitch = getenv('RE_ERROR_REPORTING_SWITCH');
+if ($errRepSwitch) {
+    $errRepVal = filter_input(INPUT_GET, $errRepSwitch);
+    if ($errRepVal !== null) {
+        error_reporting($errRepVal === '1' ? E_ALL : 0);
+    }
+}
+
 ob_start();
 
 require_once(dirname(__FILE__).'/relogin2/classes/System.class.php');
