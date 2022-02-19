@@ -149,9 +149,11 @@ class IsMySQLClass extends ADBClass implements IIsDBClass, Iterator, ArrayAccess
 				}
 
 				//virtuális mezők felvétele mező listába
-				foreach ($this->virtualFields[$tableName] as $fn => $fv) {
-					$afields[] = " ($fv) as `.$tableName.$fn` ";
-				}
+                if (isset($this->virtualFields[$tableName])) {
+                    foreach ($this->virtualFields[$tableName] as $fn => $fv) {
+                        $afields[] = " ($fv) as `.$tableName.$fn` ";
+                    }
+                }
 
 			}
 			$fields = implode(",\n",$afields);
