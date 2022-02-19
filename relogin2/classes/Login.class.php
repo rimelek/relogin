@@ -129,7 +129,7 @@ class Login
 			require_once System::getIncLoginDir().'classes/exceptions/InvalidAccountException.class.php';
 			throw new InvalidAccountException("Hibás név / jelszó!");
 		}
-		else if (!empty($user->T_profiles_useremail) and $user->T_users_useremail != $user->T_profiles_useremail)
+		else if (!empty($user->T__profiles__useremail) and $user->T__users__useremail != $user->T__profiles__useremail)
 		{
 			require_once System::getIncLoginDir().'classes/exceptions/NotActivatedException.class.php';
 			throw new NotActivatedException("Aktiváld hozzáférésed az emailben kapott linkkel!");

@@ -26,7 +26,7 @@ if(!class_exists('System'))
  */
 require_once System::getIncLoginDir().'includes/profile.php';
 
-if (empty($user->T_users_userid)) { ?>
+if (empty($user->T__users__userid)) { ?>
 
 <div align="center">
 	Nem létezik ilyen felhasználó
@@ -52,10 +52,10 @@ if (empty($user->T_users_userid)) { ?>
 	{
 		$value = ($value == 'f') ? 'Nő' : 'Férfi';
 	}
-	else if ($var == 'T_users_useremail' and !$user->public_mail)
+	else if ($var == 'T__users__useremail' and !$user->public_mail)
 	{
 		if (System::$user->rank != 1 and $user != System::$user) continue;
-		$value = "Rejtett: ".$user->T_users_useremail;
+		$value = "Rejtett: ".$user->T__users__useremail;
 	} 
 	else if($var == 'onlinetime')
 	{

@@ -114,15 +114,15 @@ class Register
 			self::$errors[] = "Foglalt felhasználó név!";
 		} 
 		//emailcím elenőrzése
-		if (!PHPMailer::ValidateAddress($user->T_profiles_useremail))
+		if (!PHPMailer::ValidateAddress($user->T__profiles__useremail))
 		{
 			self::$errors[] = "Az e-mail cím érvénytelen!";
 		}
-		else if (UserList::exists('useremail', $user->T_profiles_useremail))
+		else if (UserList::exists('useremail', $user->T__profiles__useremail))
 		{
 			self::$errors[] = "Van már ilyen e-mail cím az adatbázisban! ";
 		}
-		else if (trim($user->T_profiles_useremail) != trim($_POST['register']['reuseremail']))
+		else if (trim($user->T__profiles__useremail) != trim($_POST['register']['reuseremail']))
 		{
 			self::$errors[] = "A két e-mail cím nem egyezik!";
 		}
@@ -221,14 +221,14 @@ class Register
 			return $userid;
 		}
 
-		$link = self::createLink($userid,$user->T_profiles_useremail);
+		$link = self::createLink($userid,$user->T__profiles__useremail);
 		$body = 
 			"Kedves ".$user->username."!<br /><br />".PHP_EOL.
 			"Valaki regisztrált a nevedben az oldalunkra. ".
 			"Amennyiben nem te voltál, nyugodtan hagyd figyelmen kívül a levelet.<br /><br />".PHP_EOL.
 			"A következő linkre kattintva aktiválhatod a hozzáférésedet:<br />".PHP_EOL.
 			"<a href='$link'>$link</a>";
-		System::sendEmail($user->T_profiles_useremail, "Regisztráció", $body);
+		System::sendEmail($user->T__profiles__useremail, "Regisztráció", $body);
 
 		return $userid;
 	}
@@ -275,7 +275,7 @@ class Register
 		$email = $_POST['register']['useremail'];
 		if (Config::EMAIL_ACTIVATION)
 		{
-			$user->T_profiles_useremail = $email;
+			$user->T__profiles__useremail = $email;
 		}
 		else
 		{
@@ -314,16 +314,16 @@ class Register
 		$user->keyName = "userid";
 		$user->init($id); 
 		if (empty($user->userid) or
-			self::createHash($user->userid, $user->T_profiles_useremail) != $code or
+			self::createHash($user->userid, $user->T__profiles__useremail) != $code or
 			array_shift(mysql_fetch_row(mysql_query(
-					"select count(useremail) from ".$pref."users where useremail = '".$user->T_profiles_useremail."'"))) > 0
+					"select count(useremail) from ".$pref."users where useremail = '".$user->T__profiles__useremail."'"))) > 0
 			)
 		{
 			return false;
 		} 
-		if ($user->T_users_useremail != $user->T_profiles_useremail)
+		if ($user->T__users__useremail != $user->T__profiles__useremail)
 		{
-			$user->T_users_useremail = $user->T_profiles_useremail;
+			$user->T__users__useremail = $user->T__profiles__useremail;
 			$user->update();
 		}
 		return true;

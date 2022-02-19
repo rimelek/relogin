@@ -52,7 +52,7 @@ if (isset($_POST['usearch'])and trim($_POST['usearch']['username']))
 	mysql_query(
 		"insert into ".Config::DBPREF."searchlog
 		(userid,logtext,logtime) values
-		('".System::$user->T_users_userid."','$serialized','".System::getTimeStamp()."')");
+		('".System::$user->T__users__userid."','$serialized','".System::getTimeStamp()."')");
 	$site = Url::set(array(
 		'searchid'=>mysql_insert_id()
 	), null, '&');
@@ -60,7 +60,7 @@ if (isset($_POST['usearch'])and trim($_POST['usearch']['username']))
 	/* Felesleges logok törlése */
 
 	$limit = 100;
-	$userid = System::$user->T_users_userid;
+	$userid = System::$user->T__users__userid;
 	$sql = "select searchid from ".
 		Config::DBPREF."searchlog where userid=$userid order by searchid desc limit $limit, 1";
 	$row = mysql_fetch_row(mysql_query($sql));
@@ -84,7 +84,7 @@ if (isset($_GET['searchid']))
 
 	$query = mysql_query(
 		"select logtext from ".Config::DBPREF."searchlog
-		where searchid = $sid and userid = ".System::$user->T_users_userid);
+		where searchid = $sid and userid = ".System::$user->T__users__userid);
 
 	$row = mysql_fetch_row($query);
 	if ($row)

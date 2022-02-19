@@ -115,7 +115,7 @@ class ChangeProfile
 		}
 		else if (array_shift(mysql_fetch_row(mysql_query("select count(userid) from ".Config::DBPREF.
 				"users where useremail = '".mysql_real_escape_string($post['useremail']).
-				"' and userid != ".self::$user->T_users_userid))))
+				"' and userid != ".self::$user->T__users__userid))))
 		{
 			self::$errors[] = 'Már létezik ilyen e-mail cím!';
 		}
@@ -153,13 +153,13 @@ class ChangeProfile
 		}
 		
 		$email = strtolower(trim($post['useremail']));
-		if ($email != strtolower(self::$user->T_users_useremail))
+		if ($email != strtolower(self::$user->T__users__useremail))
 		{
 			if (Config::EMAIL_ACTIVATION)
 			{
-				self::$user->T_profiles_useremail = $email;
+				self::$user->T__profiles__useremail = $email;
 				require_once System::getIncLoginDir().'classes/Register.class.php';
-				$link  = Register::createLink(self::$user->T_users_userid, $email,Config::FILE_REGISTER);
+				$link  = Register::createLink(self::$user->T__users__userid, $email,Config::FILE_REGISTER);
 				$body =
 					"Az e-mail címed sikeresen megváltoztattad.".PHP_EOL.
 					"Kattints az alábbi linkre az aktiválásához: <br />".PHP_EOL.

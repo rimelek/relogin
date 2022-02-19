@@ -26,7 +26,7 @@ $titles = array(
 	'logintime'				=> 'Belépett:',
 	'refreshtime'			=> 'Frissített:',
 	'onlinetime'			=> 'Online ideje:',
-	'T_users_useremail'		=> 'E-mail címe:',
+	'T__users__useremail'		=> 'E-mail címe:',
 	'lastname'				=> 'Vezetéknév:',
 	'firstname'				=> 'Keresztnév:',
 	'birthdate'				=> 'Született:',
@@ -44,7 +44,7 @@ if (!System::$logged and !isset($_GET['uid']))
 	System::redirect(Config::FILE_HOME);
 }
 
-if (System::$logged and (!isset($_GET['uid']) or System::$user->T_users_userid == (int)$_GET['uid']))
+if (System::$logged and (!isset($_GET['uid']) or System::$user->T__users__userid == (int)$_GET['uid']))
 {
 	$user = System::$user;
 }
@@ -56,10 +56,10 @@ else
 
 $sendMsgUrl = Url::set(array(
 	'msgact' => 'write',
-	'msgto' => $user->T_users_userid
+	'msgto' => $user->T__users__userid
 ),Config::FILE_MESSAGES_WRITE);
 
 $chProfUrl = Url::set(array(
-	'uid' => $user->T_users_userid
+	'uid' => $user->T__users__userid
 ), Config::FILE_CHANGE_PROFILE, '&amp;');
 ?>

@@ -85,7 +85,7 @@ class Invites extends IsMySQLListClass
 		
 		$invite = new Invite(self::getTables());
 		$invite->email = $email;
-		$invite->fromid = System::$user->T_users_userid;
+		$invite->fromid = System::$user->T__users__userid;
 		$invite->code = self::createHash();
 		$invite->update(false);
 		$invite->keyName = "inviteid";

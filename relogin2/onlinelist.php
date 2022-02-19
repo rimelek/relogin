@@ -43,9 +43,9 @@ $pageLinks = $users->pageLinks(10);
 	<tr>
 		<td class="users-nick"><?php print $user->username ?></td>
 		<td class="users-rank"><?php print $user->rankName() ?></td>
-		<td class="users-mail"><?php print ($user->public_mail and !empty($user->T_users_useremail) )
-				? $user->T_users_useremail  : "Rejtett"; ?></td>
-		<td class="users-profile"><a href="<?php print str_replace('%7Bid%7D',$user->T_users_userid,$profile_tpl_url) ?>">Adatlap</a></td>
+		<td class="users-mail"><?php print ($user->public_mail and !empty($user->T__users__useremail) )
+				? $user->T__users__useremail  : "Rejtett"; ?></td>
+		<td class="users-profile"><a href="<?php print str_replace('%7Bid%7D',$user->T__users__userid,$profile_tpl_url) ?>">Adatlap</a></td>
 	</tr>
 <?php } ?>
 </table>

@@ -177,7 +177,7 @@ class Session
 	 */
 	function write($sess_id,$sess_data )
 	{
-		$uid = System::$logged ? System::$user->T_users_userid : 0;
+		$uid = System::$logged ? System::$user->T__users__userid : 0;
 		$sess_data = mysql_real_escape_string($sess_data);
 		return (is_resource(@mysql_query("replace ".
 				Config::DBPREF."sessions set sess_id = '$sess_id', sess_data = '$sess_data', mtime = '".

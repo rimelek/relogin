@@ -91,7 +91,7 @@ class Messages extends IsMySQLListClass
 					`from`.userid = messages.fromid left join '.
 				Config::DBPREF.'users as `to` on
 					`to`.userid = messages.toid where messages.'.$msg_uid.' = '.
-					System::$user->T_users_userid.' and '.
+					System::$user->T__users__userid.' and '.
 					'deleted != messages.'.$msg_uid.' order by sendtime desc',10);
 	}
 
@@ -114,7 +114,7 @@ class Messages extends IsMySQLListClass
 	 */
 	public static function msgStat()
 	{
-		$uid = (int)System::$user->T_users_userid;
+		$uid = (int)System::$user->T__users__userid;
 		$time = System::$user->newsreadtime;
 		$query = mysql_query("
 			select
@@ -166,7 +166,7 @@ class Messages extends IsMySQLListClass
 			self::$errors[] = 'Üres üzenetet nem küldhetsz!';
 		}
 
-		if ($toid == System::$user->T_users_userid)
+		if ($toid == System::$user->T__users__userid)
 		{
 			self::$errors[] = 'Magadnak nem küldhetsz üzenetet!';
 		}
@@ -187,7 +187,7 @@ class Messages extends IsMySQLListClass
 	{
 		$query = mysql_query("insert into ".
 				Config::DBPREF."messages(`fromid`, `toid`, `subject`, `body`, `sendtime`)
-				values (".System::$user->T_users_userid.",
+				values (".System::$user->T__users__userid.",
 				".((int)$toid).",'$subject','$body','".System::getTimeStamp()."')");
 	}
 
@@ -224,7 +224,7 @@ class Messages extends IsMySQLListClass
 		}
 
 		$pref = Config::DBPREF;
-		$uid = System::$user->T_users_userid;
+		$uid = System::$user->T__users__userid;
 
 		$sql = 	"delete from ".$pref."messages where messageid in ($id) ";
 		if ($del)

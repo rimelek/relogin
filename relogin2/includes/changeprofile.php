@@ -62,7 +62,7 @@ if (isset($_POST['profile']) and is_array($_POST['profile']))
 	if (ChangeProfile::request($_POST['profile'],$user))
 	{
 		$msg = "Profil sikeresen módosítva!";
-		if ($user->T_users_useremail != $user->T_profiles_useremail)
+		if ($user->T__users__useremail != $user->T__profiles__useremail)
 		{
 			$msg .= "Most újra aktiválnod kell az e-mail címed.<br />".PHP_EOL.
 					"Az aktiváló linket elküldtük az új e-mail címedre.";

@@ -52,7 +52,7 @@ $msgUserName = "";
 if (!empty($message->messageid))
 {
 	if (!$message->toid or
-		(System::$user->T_users_userid == $message->toid
+		(System::$user->T__users__userid == $message->toid
 		and empty($message->readtime)))
 	{
 		$message->readtime = System::getTimeStamp();
@@ -62,19 +62,19 @@ if (!empty($message->messageid))
 	if (!$message->toid)
 	{
 		$msgLabel = "Írta:";
-		$msgUserName = $message->T_from_username;
+		$msgUserName = $message->T__from__username;
 	}
-	else if ($message->toid == System::$user->T_users_userid)
+	else if ($message->toid == System::$user->T__users__userid)
 	{
 		$msgLabel = "Feladó:";
 		$msgUserId = $message->fromid;
-		$msgUserName = $message->T_from_username;
+		$msgUserName = $message->T__from__username;
 	}
 	else
 	{
 		$msgLabel = "Címzett:";
 		$msgUserId = $message->toid;
-		$msgUserName = $message->T_to_username;
+		$msgUserName = $message->T__to__username;
 	}
 
 }

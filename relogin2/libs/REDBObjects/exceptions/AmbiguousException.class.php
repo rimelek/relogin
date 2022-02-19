@@ -14,7 +14,7 @@
  * Olyankor egy jelzősztringnek, és a táblanévnek meg kell előznie a mezőnevet. <br />
  * <code>
  * $this->mail = 'valami@ize.hu'; //hibás
- * $this->T_users_mail = 'valami@ize.hu'; //helyes
+ * $this->T__users__mail = 'valami@ize.hu'; //helyes
  * </code>
  *
  * @author Takács Ákos (Rimelek), programmer [at] rimelek [dot] hu

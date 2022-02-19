@@ -60,8 +60,8 @@ class Message extends IsMySQLClass
 					`from`.userid = messages.fromid left join ".
 				Config::DBPREF."users as `to` on
 					`to`.userid = messages.toid where ((".
-					System::$user->T_users_userid." in (messages.fromid, messages.toid)
-					and deleted != ".System::$user->T_users_userid.") or messages.toid = 0)
+					System::$user->T__users__userid." in (messages.fromid, messages.toid)
+					and deleted != ".System::$user->T__users__userid.") or messages.toid = 0)
 					and messages.messageid = ".$id,true);
 		} 
 	}
@@ -138,7 +138,7 @@ class Message extends IsMySQLClass
 	 */
 	public function isIncomming()
 	{
-		return $this->toid == System::$user->T_users_userid;
+		return $this->toid == System::$user->T__users__userid;
 	}
 
 	/**
@@ -148,7 +148,7 @@ class Message extends IsMySQLClass
 	 */
 	public function isOutgoing()
 	{
-		return $this->fromid == System::$user->T_users_userid;
+		return $this->fromid == System::$user->T__users__userid;
 	}
 
 	/**

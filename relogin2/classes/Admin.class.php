@@ -206,7 +206,7 @@ class Admin
 			self::$errors[] = 'Nincs "'.$username.'" nevű felhasználó';
 			return false;
 		}
-		if ($ids[0] == System::$user->T_users_userid)
+		if ($ids[0] == System::$user->T__users__userid)
 		{
 			self::$errors[] = 'Saját magad nem módosíthatod!';
 			return false;
